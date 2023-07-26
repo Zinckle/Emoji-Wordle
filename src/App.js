@@ -6,9 +6,8 @@ import EmojiPicker, {
   Emoji,
   PreviewConfig,
 } from "emoji-picker-react";
-import { async } from "react-input-emoji";
 
-export default async function App() {
+export default function App() {
   var date = new Date()
 
   var seed = cyrb128(date.getFullYear() + " " + date.getMonth() + " " + date.getDate());
@@ -17,25 +16,43 @@ export default async function App() {
   var listOfPossibleGuesses = [];
   var listOfPossibleAnswers = [];
 
-    // Wait for the data to load using async/await
-    var data = await loadTSVData("2021_ranked.tsv");
+  const data = d3.dsvFormat("\t").parse(d3.dsvFormat("\t").format("2021_ranked.tsv"));
+console.log(data)
+  d3.tsv("2021_ranked.tsv", function (data) {
+    let code = data.Hex.slice(3);
+    code = code.substring(0, code.length - 1);
+    data.Hex = code;
+    listOfPossibleGuesses.push(data);
+    if (!(data.Category === "Flags" || data.Category === "Component")) {
+      listOfPossibleAnswers.push(data);
+    }
+  });
 
-    data.forEach((item) => {
-      let code = item.Hex.slice(3);
-      code = code.substring(0, code.length - 1);
-      item.Hex = code;
-      listOfPossibleGuesses.push(item);
-      if (!(item.Category === "Flags" || item.Category === "Component")) {
-        listOfPossibleAnswers.push(item);
-      }
+  d3.tsv("2021_ranked.tsv")
+    .then(function (data) {
+      data.forEach((item) => {
+        let code = item.Hex.slice(3);
+        code = code.substring(0, code.length - 1);
+        item.Hex = code;
+        listOfPossibleGuesses.push(item);
+        if (!(item.Category === "Flags" || item.Category === "Component")) {
+          listOfPossibleAnswers.push(item);
+        }
+      });
+
+      rand = Math.floor(rand * 1000) % listOfPossibleAnswers.length;
+      let emojiOfTheDay = listOfPossibleAnswers[rand];
+      console.log(emojiOfTheDay);
+    })
+    .catch(function (error) {
+      console.error("Error loading data:", error);
     });
 
-  rand = Math.floor(rand*10000)
-  rand = rand%listOfPossibleAnswers
+  //rand = Math.floor(rand*10000)
+  //let lengthOfAnswers = 1277
+  //rand = rand%lengthOfAnswers
 
-  let emojiOfTheDay = listOfPossibleAnswers[rand]
 
-  console.log(emojiOfTheDay)
 
   const inputRef = useRef(null);
 
@@ -155,13 +172,3 @@ function sfc32(a, b, c, d) {
     return (t >>> 0) / 4294967296;
   };
 
-  async function loadTSVData(file) {
-    return new Promise(function (resolve, reject) {
-      var test = []
-      d3.tsv(file, function (data) {
-          
-        test.push(data)}
-      );
-      return(test);
-    });
-  }
