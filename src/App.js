@@ -1,6 +1,6 @@
 import "./App.css";
 import * as d3 from "d3";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import EmojiPicker, {
   EmojiClickData,
   Emoji,
@@ -8,77 +8,98 @@ import EmojiPicker, {
 } from "emoji-picker-react";
 
 export default function App() {
-  var date = new Date()
+  const [emojiOfTheDay, setEmojiOfTheDay] = useState(null);
+  const [listOfPossibleGuesses, setListOfPossibleGuesses] = useState([]);
+  const [listOfPossibleAnswers, setListOfPossibleAnswers] = useState([]);
 
-  var seed = cyrb128(date.getFullYear() + " " + date.getMonth() + " " + date.getDate());
-  var rand = sfc32(seed[0], seed[1], seed[2], seed[3]);
+  useEffect(() => {
+    var date = new Date();
 
-  var listOfPossibleGuesses = [];
-  var listOfPossibleAnswers = [];
+    var seed = cyrb128(
+      date.getFullYear() + " " + date.getMonth() + " " + date.getDate()
+    );
+    var rand = sfc32(seed[0], seed[1], seed[2], seed[3]);
 
-  const data = d3.dsvFormat("\t").parse(d3.dsvFormat("\t").format("2021_ranked.tsv"));
-console.log(data)
-  d3.tsv("2021_ranked.tsv", function (data) {
-    let code = data.Hex.slice(3);
-    code = code.substring(0, code.length - 1);
-    data.Hex = code;
-    listOfPossibleGuesses.push(data);
-    if (!(data.Category === "Flags" || data.Category === "Component")) {
-      listOfPossibleAnswers.push(data);
-    }
-  });
+    d3.tsv("2021_ranked.tsv")
+      .then(function (data) {
+        const newListOfPossibleGuesses = [];
+        const newListOfPossibleAnswers = [];
 
-  d3.tsv("2021_ranked.tsv")
-    .then(function (data) {
-      data.forEach((item) => {
-        let code = item.Hex.slice(3);
-        code = code.substring(0, code.length - 1);
-        item.Hex = code;
-        listOfPossibleGuesses.push(item);
-        if (!(item.Category === "Flags" || item.Category === "Component")) {
-          listOfPossibleAnswers.push(item);
-        }
+        data.forEach((item) => {
+          let code = item.Hex.slice(3);
+          code = code.substring(0, code.length - 1);
+          item.Hex = code;
+          newListOfPossibleGuesses.push(item);
+          if (!(item.Category === "Flags" || item.Category === "Component")) {
+            newListOfPossibleAnswers.push(item);
+          }
+        });
+
+        setListOfPossibleGuesses(newListOfPossibleGuesses);
+        setListOfPossibleAnswers(newListOfPossibleAnswers);
+
+        rand = Math.floor(rand * 1000) % newListOfPossibleAnswers.length;
+        setEmojiOfTheDay(newListOfPossibleAnswers[rand]);
+
+        console.log(newListOfPossibleAnswers[rand]);
+      })
+      .catch(function (error) {
+        console.error("Error loading data:", error);
       });
-
-      rand = Math.floor(rand * 1000) % listOfPossibleAnswers.length;
-      let emojiOfTheDay = listOfPossibleAnswers[rand];
-      console.log(emojiOfTheDay);
-    })
-    .catch(function (error) {
-      console.error("Error loading data:", error);
-    });
-
-  //rand = Math.floor(rand*10000)
-  //let lengthOfAnswers = 1277
-  //rand = rand%lengthOfAnswers
-
-
-
-  const inputRef = useRef(null);
-
-  const [message, setMessage] = useState("");
-
-  const [updated, setUpdated] = useState("");
+  }, []);
 
   const [selectedEmoji, setSelectedEmoji] = useState("");
 
-  const handleClick = () => {
-    // 👇 "inputRef.current.value" is input value
-    console.log(selectedEmoji.emoji);
-    addItem(selectedEmoji.emoji);
-  };
+  const search = '-';
+  const replaceWith = ' ';
 
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      // 👇 Get input value
-      addItem(selectedEmoji.emoji);
-      console.log(selectedEmoji.emoji);
+  const handleClick = () => {
+    var foundEmoji;
+    listOfPossibleGuesses.forEach((element) => {
+      if (
+        selectedEmoji.unified.split(search).join(replaceWith).toUpperCase() ===
+        element.Hex
+      ) {
+        foundEmoji = element;
+      }
+    });
+    console.log(foundEmoji);
+    /*if (selectedEmoji.Hex == emojiOfTheDay.Hex)
+    {
+      //win
+    }*/
+    //check year
+    let year = "✅";
+    if (foundEmoji.Year > emojiOfTheDay.Year) {
+      year = "⬇️";
+    } else if (foundEmoji.Year < emojiOfTheDay.Year) {
+      year = "⬆️";
     }
+    //check Rank
+    let rank = "✅";
+    if (foundEmoji.Rank > emojiOfTheDay.Rank) {
+      rank = "⬇️";
+    } else if (foundEmoji.Rank < emojiOfTheDay.Rank) {
+      rank = "⬆️";
+    }
+
+    //check category
+    let category = "❌";
+    if (foundEmoji.Category === emojiOfTheDay.Category) {
+      category = "✅";
+    }
+    let subcategory = "❌";
+    if (foundEmoji.Subcategory === emojiOfTheDay.Subcategory) {
+      subcategory = "✅";
+    }
+
+    setSelectedEmoji(null);
+    addItem(foundEmoji, year, rank, category, subcategory);
   };
 
   const onClick = (emojiData, event) => {
-    console.log(selectedEmoji.emoji);
     setSelectedEmoji(emojiData);
+    console.log(emojiData)
   };
 
   return (
@@ -97,7 +118,7 @@ console.log(data)
         {selectedEmoji ? (
           <span>
             <Emoji
-              unified={selectedEmoji.emoji.codePointAt(0).toString(16)}
+              unified={selectedEmoji.unified}
               size="100"
             />
           </span>
@@ -106,31 +127,63 @@ console.log(data)
         )}
         <br />
         <br />
-        <button
-          class="button-20"
-          onClick={handleClick}
-          onKeyDown={handleKeyDown}
-        >
+        <button class="button-20" onClick={handleClick}>
           Submit
         </button>
       </div>
+      <hr class="rounded" />
+      <div class="headders">
+        <div text-align="center">
+          Emoji
+          <hr class="rounded" />
+        </div>
+        <div text-align="center">
+          Released
+          <hr class="rounded" />
+        </div>
+        <div text-align="center">
+          Popularity
+          <hr class="rounded" />
+        </div>
+        <div text-align="center">
+          Category
+          <hr class="rounded" />
+        </div>
+        <div text-align="center">
+          Sub-Category
+          <hr class="rounded" />
+        </div>
+      </div>
+
       <div id="parent" class="border"></div>
     </div>
   );
 }
 
-function addItem(selectedEmoji) {
-  let value = selectedEmoji;
+function addItem(selectedEmoji, year, rank, category, subcategory) {
 
-  document
-    .getElementById("parent")
-    .appendChild(
-      Object.assign(document.createElement("div"), {
-        innerHTML: value,
-        id: "answer",
-        className: "border",
-      })
-    );
+
+
+  let value =
+    '<div class = "headders"><div text-align = "center border">'
+    +selectedEmoji.Emoji+
+    '<hr class="rounded"/></div><div text-align = "center">'
+    + selectedEmoji.Year + year +
+    '<hr class="rounded"/></div><div text-align = "center">'
+    + selectedEmoji.Rank + rank +
+    '<hr class="rounded"/></div><div text-align = "center">'
+    + selectedEmoji.Category + category +
+    '<hr class="rounded"/></div><div text-align = "center">'
+    + selectedEmoji.Subcategory + subcategory +
+    '<hr class="rounded"/></div></div>';
+
+  document.getElementById("parent").appendChild(
+    Object.assign(document.createElement("div"), {
+      innerHTML: value,
+      id: "answer",
+      className: "border answers",
+    })
+  );
 }
 
 function cyrb128(str) {
@@ -156,19 +209,17 @@ function cyrb128(str) {
     (h4 ^ h1) >>> 0,
   ];
 }
-
 function sfc32(a, b, c, d) {
-    a >>>= 0;
-    b >>>= 0;
-    c >>>= 0;
-    d >>>= 0;
-    var t = (a + b) | 0;
-    a = b ^ (b >>> 9);
-    b = (c + (c << 3)) | 0;
-    c = (c << 21) | (c >>> 11);
-    d = (d + 1) | 0;
-    t = (t + d) | 0;
-    c = (c + t) | 0;
-    return (t >>> 0) / 4294967296;
-  };
-
+  a >>>= 0;
+  b >>>= 0;
+  c >>>= 0;
+  d >>>= 0;
+  var t = (a + b) | 0;
+  a = b ^ (b >>> 9);
+  b = (c + (c << 3)) | 0;
+  c = (c << 21) | (c >>> 11);
+  d = (d + 1) | 0;
+  t = (t + d) | 0;
+  c = (c + t) | 0;
+  return (t >>> 0) / 4294967296;
+}

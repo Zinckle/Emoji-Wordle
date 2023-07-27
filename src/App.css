@@ -13,15 +13,9 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+hr.rounded {
+  border-top: 8px solid #bbb;
+  border-radius: 5px;
 }
 
 .center {
@@ -32,9 +26,28 @@
   gap: 4px;
   grid-auto-flow: column;
 }
+.answer-center {
+  border: 5px solid;
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+  border: 3px solid green;
+  
+}
+.headders {
+  display: grid;
+  width: 50%;
+  margin: auto;
+  grid-auto-flow: column;
+  padding: 10px;
+  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.answers {
 
-.inner {
-  position: absolute;
+  background-color: powderblue;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .border{
@@ -101,3 +114,4 @@
   opacity: .65;
   pointer-events: none;
 }
+
