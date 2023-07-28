@@ -48,6 +48,7 @@ hr.rounded {
   background-color: powderblue;
   text-align: center;
   vertical-align: middle;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .border{

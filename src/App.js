@@ -70,17 +70,17 @@ export default function App() {
     }*/
     //check year
     let year = "✅";
-    if (foundEmoji.Year > emojiOfTheDay.Year) {
+    if (parseInt(foundEmoji.Year) > parseInt(emojiOfTheDay.Year)) {
       year = "⬇️";
-    } else if (foundEmoji.Year < emojiOfTheDay.Year) {
+    } else if (parseInt(foundEmoji.Year) < parseInt(emojiOfTheDay.Year)) {
       year = "⬆️";
     }
     //check Rank
     let rank = "✅";
-    if (foundEmoji.Rank > emojiOfTheDay.Rank) {
-      rank = "⬇️";
-    } else if (foundEmoji.Rank < emojiOfTheDay.Rank) {
+    if (parseInt(foundEmoji.Rank) > parseInt(emojiOfTheDay.Rank)) {
       rank = "⬆️";
+    }if (parseInt(foundEmoji.Rank) < parseInt(emojiOfTheDay.Rank)) {
+      rank = "⬇️";
     }
 
     //check category
@@ -102,6 +102,12 @@ export default function App() {
     console.log(emojiData)
   };
 
+  const previewConfig = {
+    defaultEmoji: "😊",
+    defaultCaption: "default",
+    showPreview: false,
+  };
+
   return (
     <div>
       <div class="center">
@@ -111,6 +117,7 @@ export default function App() {
           skinTonesDisabled="true"
           suggestedEmojisMode="recent"
           theme="dark"
+          previewConfig = {previewConfig}
         />
       </div>
 
@@ -132,7 +139,7 @@ export default function App() {
         </button>
       </div>
       <hr class="rounded" />
-      <div class="headders">
+      <div class="headders border answers">
         <div text-align="center">
           Emoji
           <hr class="rounded" />
@@ -167,22 +174,22 @@ function addItem(selectedEmoji, year, rank, category, subcategory) {
   let value =
     '<div class = "headders"><div text-align = "center border">'
     +selectedEmoji.Emoji+
-    '<hr class="rounded"/></div><div text-align = "center">'
+    '</div><div text-align = "center">'
     + selectedEmoji.Year + year +
-    '<hr class="rounded"/></div><div text-align = "center">'
+    '</div><div text-align = "center">'
     + selectedEmoji.Rank + rank +
-    '<hr class="rounded"/></div><div text-align = "center">'
+    '</div><div text-align = "center">'
     + selectedEmoji.Category + category +
-    '<hr class="rounded"/></div><div text-align = "center">'
+    '</div><div text-align = "center">'
     + selectedEmoji.Subcategory + subcategory +
-    '<hr class="rounded"/></div></div>';
+    '</div></div>';
 
-  document.getElementById("parent").appendChild(
+  document.getElementById("parent").insertBefore(
     Object.assign(document.createElement("div"), {
       innerHTML: value,
       id: "answer",
       className: "border answers",
-    })
+    }), document.getElementById("parent").firstChild
   );
 }
 
