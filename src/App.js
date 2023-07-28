@@ -52,12 +52,13 @@ export default function App() {
 
   const search = '-';
   const replaceWith = ' ';
-
+  
   const handleClick = () => {
     var foundEmoji;
+    console.log(selectedEmoji)
     listOfPossibleGuesses.forEach((element) => {
       if (
-        selectedEmoji.unified.split(search).join(replaceWith).toUpperCase() ===
+        selectedEmoji.unified.split(search).join(replaceWith).replace(/^0+/, '').toUpperCase() ===
         element.Hex
       ) {
         foundEmoji = element;
@@ -109,7 +110,8 @@ export default function App() {
   };
 
   return (
-    <div>
+    <div class = "bg">
+      <meta charset="utf-16" />
       <div class="center">
         <EmojiPicker
           onEmojiClick={onClick}
@@ -118,6 +120,7 @@ export default function App() {
           suggestedEmojisMode="recent"
           theme="dark"
           previewConfig = {previewConfig}
+          emojiStyle = "native"
         />
       </div>
 
@@ -127,6 +130,7 @@ export default function App() {
             <Emoji
               unified={selectedEmoji.unified}
               size="100"
+              emojiStyle = "native"
             />
           </span>
         ) : (
@@ -138,32 +142,41 @@ export default function App() {
           Submit
         </button>
       </div>
-      <hr class="rounded" />
-      <div class="headders border answers">
-        <div text-align="center">
-          Emoji
-          <hr class="rounded" />
-        </div>
-        <div text-align="center">
-          Released
-          <hr class="rounded" />
-        </div>
-        <div text-align="center">
-          Popularity
-          <hr class="rounded" />
-        </div>
-        <div text-align="center">
-          Category
-          <hr class="rounded" />
-        </div>
-        <div text-align="center">
-          Sub-Category
-          <hr class="rounded" />
-        </div>
-      </div>
 
-      <div id="parent" class="border"></div>
+
+      <div class = "scrollable">
+      <div class="answers">
+        <div class = "shadow-box">
+          Emoji
+          
+        </div>
+        <div class = "shadow-box">
+          Released
+          
+        </div>
+        <div class = "shadow-box">
+          Popularity
+          
+        </div>
+        <div class = "shadow-box">
+          Category
+          
+        </div>
+        <div class = "shadow-box">
+          Sub-Category
+          
+        </div>
+        <div class = "shadow-box">
+          Hint
+        </div>
+        
+      </div>
+      <hr class="rounded" />
+      <div id="parent" class = "parent"></div>
     </div>
+    
+    </div>
+    
   );
 }
 
@@ -172,23 +185,25 @@ function addItem(selectedEmoji, year, rank, category, subcategory) {
 
 
   let value =
-    '<div class = "headders"><div text-align = "center border">'
+    '<div class = "answers"><div class = "shadow-box">'
     +selectedEmoji.Emoji+
-    '</div><div text-align = "center">'
-    + selectedEmoji.Year + year +
-    '</div><div text-align = "center">'
-    + selectedEmoji.Rank + rank +
-    '</div><div text-align = "center">'
-    + selectedEmoji.Category + category +
-    '</div><div text-align = "center">'
-    + selectedEmoji.Subcategory + subcategory +
+    '</div><div class = "spinner shadow-box">'
+    + selectedEmoji.Year + " " +  year +
+    '</div><div class = "spinner shadow-box">'
+    + selectedEmoji.Rank + " " +  rank +
+    '</div><div class = "spinner shadow-box">'
+    + selectedEmoji.Category + " " +  category +
+    '</div><div class = "spinner shadow-box">'
+    + selectedEmoji.Subcategory + " " + subcategory +
+    '</div><div class = "spinner shadow-box">'
+    + selectedEmoji.Emoji +
     '</div></div>';
 
   document.getElementById("parent").insertBefore(
     Object.assign(document.createElement("div"), {
       innerHTML: value,
       id: "answer",
-      className: "border answers",
+      className: "",
     }), document.getElementById("parent").firstChild
   );
 }
