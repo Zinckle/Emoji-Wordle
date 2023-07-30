@@ -73,14 +73,13 @@ export default function App() {
       console.log(convertedUni)
       if (foundEmoji === undefined)
       {
-        console.log("heyo")
         convertedUni = convertedUni.substr(0, convertedUni.lastIndexOf(" "))
         console.log(convertedUni)
       } else{
         convertedUni = ""
       }
-      
     }
+
     /*if (selectedEmoji.Hex == emojiOfTheDay.Hex)
     {
       //win
@@ -92,6 +91,7 @@ export default function App() {
     } else if (parseInt(foundEmoji.Year) < parseInt(emojiOfTheDay.Year)) {
       year = "⬆️";
     }
+    
     //check Rank
     let rank = "✅";
     if (parseInt(foundEmoji.Rank) > parseInt(emojiOfTheDay.Rank)) {
@@ -126,16 +126,17 @@ export default function App() {
   };
 
   return (
-    <div class = "bg">
+    <div>
       <meta charset="utf-16" />
       <div class="center">
         <EmojiPicker
           onEmojiClick={onClick}
-          emojiVersion="12.0"
+          emojiVersion="11.0"
           skinTonesDisabled="true"
           suggestedEmojisMode="recent"
           theme="dark"
           previewConfig = {previewConfig}
+          emojiStyle = "native"
         />
       </div>
 
@@ -186,8 +187,7 @@ export default function App() {
         </div>
         
       </div>
-      <hr class="rounded" />
-      <div id="parent" class = "parent"></div>
+      <div id="parent" class = ""></div>
     </div>
     
     </div>
