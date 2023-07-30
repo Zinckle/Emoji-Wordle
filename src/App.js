@@ -6,6 +6,7 @@ import EmojiPicker, {
   Emoji,
   PreviewConfig,
 } from "emoji-picker-react";
+import { generatePalette } from "emoji-palette";
 
 export default function App() {
   const [emojiOfTheDay, setEmojiOfTheDay] = useState(null);
@@ -55,16 +56,31 @@ export default function App() {
   
   const handleClick = () => {
     var foundEmoji;
-    console.log(selectedEmoji)
-    listOfPossibleGuesses.forEach((element) => {
-      if (
-        selectedEmoji.unified.split(search).join(replaceWith).replace(/^0+/, '').toUpperCase() ===
-        element.Hex
-      ) {
-        foundEmoji = element;
+    var convertedUni = selectedEmoji.unified.split(search).join(replaceWith).replace(/^0+/, '').toUpperCase()
+    while(convertedUni !== "")
+    {
+      console.log(selectedEmoji)
+      // eslint-disable-next-line no-loop-func
+      listOfPossibleGuesses.forEach((element) => {
+        if (
+          convertedUni ===
+          element.Hex
+        ) {
+          foundEmoji = element;
+        }
+      });
+      console.log(foundEmoji);
+      console.log(convertedUni)
+      if (foundEmoji === undefined)
+      {
+        console.log("heyo")
+        convertedUni = convertedUni.substr(0, convertedUni.lastIndexOf(" "))
+        console.log(convertedUni)
+      } else{
+        convertedUni = ""
       }
-    });
-    console.log(foundEmoji);
+      
+    }
     /*if (selectedEmoji.Hex == emojiOfTheDay.Hex)
     {
       //win
@@ -115,12 +131,11 @@ export default function App() {
       <div class="center">
         <EmojiPicker
           onEmojiClick={onClick}
-          emojiVersion="11.0"
+          emojiVersion="12.0"
           skinTonesDisabled="true"
           suggestedEmojisMode="recent"
           theme="dark"
           previewConfig = {previewConfig}
-          emojiStyle = "native"
         />
       </div>
 
@@ -181,8 +196,9 @@ export default function App() {
 }
 
 function addItem(selectedEmoji, year, rank, category, subcategory) {
-
-
+  const palette = generatePalette(selectedEmoji.Emoji);
+  const dominantColor = palette[Math.floor(palette.length / 2)];
+  console.log(dominantColor)
 
   let value =
     '<div class = "answers"><div class = "shadow-box">'
@@ -196,7 +212,7 @@ function addItem(selectedEmoji, year, rank, category, subcategory) {
     '</div><div class = "spinner shadow-box">'
     + selectedEmoji.Subcategory + " " + subcategory +
     '</div><div class = "spinner shadow-box">'
-    + selectedEmoji.Emoji +
+    + palette +
     '</div></div>';
 
   document.getElementById("parent").insertBefore(
