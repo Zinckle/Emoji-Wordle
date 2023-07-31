@@ -1,0 +1,41 @@
+[debug] [2023-07-31T21:33:51.078Z] ----------------------------------------------------------------------
+[debug] [2023-07-31T21:33:51.080Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\mzinc\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2023-07-31T21:33:51.080Z] CLI Version:   12.4.6
+[debug] [2023-07-31T21:33:51.080Z] Platform:      win32
+[debug] [2023-07-31T21:33:51.080Z] Node Version:  v16.16.0
+[debug] [2023-07-31T21:33:51.081Z] Time:          Mon Jul 31 2023 17:33:51 GMT-0400 (Eastern Daylight Saving Time)
+[debug] [2023-07-31T21:33:51.081Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-07-31T21:33:51.138Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-07-31T21:33:51.138Z] > authorizing via signed-in user (mzinck9@gmail.com)
+[debug] [2023-07-31T21:33:51.138Z] [iam] checking project emoji-of-the-day-df038 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-07-31T21:33:51.140Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/emoji-of-the-day-df038:testIamPermissions [none]
+[debug] [2023-07-31T21:33:51.140Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/emoji-of-the-day-df038:testIamPermissions x-goog-quota-user=projects/emoji-of-the-day-df038
+[debug] [2023-07-31T21:33:51.140Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/emoji-of-the-day-df038:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-07-31T21:33:51.417Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/emoji-of-the-day-df038:testIamPermissions 200
+[debug] [2023-07-31T21:33:51.418Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/emoji-of-the-day-df038:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-07-31T21:33:51.418Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/emoji-of-the-day-df038 [none]
+[debug] [2023-07-31T21:33:51.756Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/emoji-of-the-day-df038 200
+[debug] [2023-07-31T21:33:51.756Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/emoji-of-the-day-df038 {"projectId":"emoji-of-the-day-df038","projectNumber":"988993061012","displayName":"Emoji Of The Day","name":"projects/emoji-of-the-day-df038","resources":{"hostingSite":"emoji-of-the-day-df038"},"state":"ACTIVE","etag":"1_339ba14b-74c8-46d7-9b9c-f53c338aa7c5"}
+[info] 
+[info] === Deploying to 'emoji-of-the-day-df038'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2023-07-31T21:33:51.761Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/emoji-of-the-day-df038/versions [none]
+[debug] [2023-07-31T21:33:51.761Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/emoji-of-the-day-df038/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2023-07-31T21:34:02.281Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/emoji-of-the-day-df038/versions 500
+[debug] [2023-07-31T21:34:02.281Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/emoji-of-the-day-df038/versions {"error":{"code":500,"message":"Internal error encountered.","status":"INTERNAL"}}
+[error] 
+[error] Error: HTTP Error: 500, Internal error encountered.
+[debug] [2023-07-31T21:34:02.382Z] Error Context: {
+  "body": {
+    "error": {
+      "code": 500,
+      "message": "Internal error encountered.",
+      "status": "INTERNAL"
+    }
+  },
+  "response": {
+    "statusCode": 500
+  }
+}
