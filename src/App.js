@@ -1,16 +1,15 @@
 import "./App.css";
 import * as d3 from "d3";
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import EmojiPicker, {
-  EmojiClickData,
   Emoji,
-  PreviewConfig,
 } from "emoji-picker-react";
-import { generatePalette } from "emoji-palette";
+//import { generatePalette } from "emoji-palette";
 
 export default function App() {
   const [emojiOfTheDay, setEmojiOfTheDay] = useState(null);
   const [listOfPossibleGuesses, setListOfPossibleGuesses] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [listOfPossibleAnswers, setListOfPossibleAnswers] = useState([]);
 
   useEffect(() => {
@@ -35,7 +34,6 @@ export default function App() {
             newListOfPossibleAnswers.push(item);
           }
         });
-
         setListOfPossibleGuesses(newListOfPossibleGuesses);
         setListOfPossibleAnswers(newListOfPossibleAnswers);
 
@@ -109,7 +107,7 @@ export default function App() {
         .split(search)
         .join(replaceWith)
         .replace(/^0+/, "")
-        .toUpperCase() == emojiOfTheDay.Hex
+        .toUpperCase() === emojiOfTheDay.Hex
     ) {
       const modal = document.querySelector(".modal");
       const closeBtn = document.querySelector(".close");
@@ -234,7 +232,7 @@ function addItem(
   );
 }
 
-function getPallete(emoji, emojiOfTheDay) {
+/*function getPallete(emoji, emojiOfTheDay) {
   const palette = generatePalette(emoji.Emoji);
   const eotdPalette = generatePalette(emojiOfTheDay.Emoji);
   var test = "";
@@ -257,7 +255,7 @@ function getPallete(emoji, emojiOfTheDay) {
   });
 
   return test;
-}
+}*/
 
 function cyrb128(str) {
   let h1 = 1779033703,
