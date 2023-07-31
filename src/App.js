@@ -125,11 +125,11 @@ export default function App() {
     console.log(emojiData);
   };
 
-  const previewConfig = {
+  /*const previewConfig = {
     defaultEmoji: "😊",
     defaultCaption: "default",
     showPreview: false,
-  };
+  };*/
 
   return (
     <div>
@@ -144,7 +144,7 @@ export default function App() {
           skinTonesDisabled="true"
           suggestedEmojisMode="recent"
           theme="dark"
-          previewConfig={previewConfig}
+          
           emojiStyle="native"
         />
       </div>
