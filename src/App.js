@@ -16,7 +16,7 @@ export default function App() {
     var date = new Date();
 
     var seed = cyrb128(
-      date.getFullYear() + " " + date.getMonth() + " " + date.getDate()
+      date.getFullYear() + " " + date.getMonth() + " " + date.getDate() + date.getSeconds()
     );
     var rand = sfc32(seed[0], seed[1], seed[2], seed[3]);
 
