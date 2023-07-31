@@ -36,46 +36,54 @@ hr.rounded {
   color: white;
 }*/
 
+.pallete {
+  padding: 3px;
+  gap: 3px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+}
+
+.pallete-box {
+  height: 25px;
+  width: 30px;
+}
+
 .answers {
   display: grid;
   text-align: center;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   width: 800px;
   margin: auto;
   padding: 10px;
   gap: 10px;
-  
 }
 
-.shadow-box{
+.shadow-box {
   display: flex;
-  box-shadow: inset 0 0 5px #121111;
-  border: 1px solid green;
-  background-color: powderblue;
+  box-shadow: inset 0 0 15px #121111;
+  border: 1px solid #121111;
+  background-color: #bdb5b5;
   min-height: 100px;
-  align-items:center;
-  justify-content:center;
+  align-items: center;
+  justify-content: center;
   font-size: 26px;
-
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
 .spinner {
   transform: rotateX(180deg);
   animation: flip 1s ease forwards;
   backface-visibility: hidden;
-  
-} 
+}
 
 @keyframes flip {
-from {
-  transform: perspective(100px)
-  rotateX(180deg);
-
-}
-to {
-  transform: perspective(100px)
-  rotateX(360deg);
-}
+  from {
+    transform: perspective(100px) rotateX(180deg);
+  }
+  to {
+    transform: perspective(100px) rotateX(360deg);
+  }
 }
 
 .spinner:nth-child(1) {
@@ -97,37 +105,82 @@ to {
   animation-delay: 650ms;
 }
 
-.scrollable{
+.scrollable {
   overflow-x: auto;
   overflow-y: hidden;
   justify-content: center;
 }
 
+.clicked-emoji {
+  padding: 25px;
+}
+.no-emoji {
+  padding-top: 75px;
+  padding-bottom: 55px;
+  padding-left: 35px;
+  padding-right: 35px;
+  color: white;
+}
+.button-center {
+  padding-top: 40px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.25);
+}
+
+.modal_content {
+  background-color: lightgreen;
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  margin-left: auto; 
+  margin-right: auto; 
+  padding: 20px;
+  border-radius: 5px;
+  border: 2px solid black;
+  justify-content: center;
+  width: 900px;
+}
+
 /* CSS */
 .button-20 {
   appearance: button;
-  background-color: #4D4AE8;
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, .15), rgba(255, 255, 255, 0));
-  border: 1px solid #4D4AE8;
+  background-color: #4d4ae8;
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0)
+  );
+  border: 1px solid #4d4ae8;
   border-radius: 1rem;
-  box-shadow: rgba(255, 255, 255, 0.15) 0 1px 0 inset,rgba(46, 54, 80, 0.075) 0 1px 1px;
+  box-shadow: rgba(255, 255, 255, 0.15) 0 1px 0 inset,
+    rgba(46, 54, 80, 0.075) 0 1px 1px;
   box-sizing: border-box;
-  color: #FFFFFF;
+  color: #ffffff;
   cursor: pointer;
   display: inline-block;
-  font-family: Inter,sans-serif;
-  font-size: 1rem;
+  font-family: Inter, sans-serif;
+  font-size: 2rem;
   font-weight: 500;
   line-height: 1.5;
   margin: 0;
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
   text-align: center;
   text-transform: none;
-  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
   vertical-align: middle;
+  height: 70px;
+  width: 150px;
 }
 
 .button-20:focus:not(:focus-visible),
@@ -136,31 +189,32 @@ to {
 }
 
 .button-20:hover {
-  background-color: #3733E5;
-  border-color: #3733E5;
+  background-color: #3733e5;
+  border-color: #3733e5;
 }
 
 .button-20:focus {
-  background-color: #413FC5;
-  border-color: #3E3BBA;
-  box-shadow: rgba(255, 255, 255, 0.15) 0 1px 0 inset, rgba(46, 54, 80, 0.075) 0 1px 1px, rgba(104, 101, 235, 0.5) 0 0 0 .2rem;
+  background-color: #413fc5;
+  border-color: #3e3bba;
+  box-shadow: rgba(255, 255, 255, 0.15) 0 1px 0 inset,
+    rgba(46, 54, 80, 0.075) 0 1px 1px, rgba(104, 101, 235, 0.5) 0 0 0 0.2rem;
 }
 
 .button-20:active {
-  background-color: #3E3BBA;
+  background-color: #3e3bba;
   background-image: none;
-  border-color: #3A38AE;
+  border-color: #3a38ae;
   box-shadow: rgba(46, 54, 80, 0.125) 0 3px 5px inset;
 }
 
 .button-20:active:focus {
-  box-shadow: rgba(46, 54, 80, 0.125) 0 3px 5px inset, rgba(104, 101, 235, 0.5) 0 0 0 .2rem;
+  box-shadow: rgba(46, 54, 80, 0.125) 0 3px 5px inset,
+    rgba(104, 101, 235, 0.5) 0 0 0 0.2rem;
 }
 
 .button-20:disabled {
   background-image: none;
   box-shadow: none;
-  opacity: .65;
+  opacity: 0.65;
   pointer-events: none;
 }
-

@@ -42,7 +42,7 @@ export default function App() {
         rand = Math.floor(rand * 1000) % newListOfPossibleAnswers.length;
         setEmojiOfTheDay(newListOfPossibleAnswers[rand]);
 
-        console.log(newListOfPossibleAnswers[rand]);
+        //console.log(newListOfPossibleAnswers[rand]);
       })
       .catch(function (error) {
         console.error("Error loading data:", error);
@@ -51,52 +51,44 @@ export default function App() {
 
   const [selectedEmoji, setSelectedEmoji] = useState("");
 
-  const search = '-';
-  const replaceWith = ' ';
-  
+  const search = "-";
+  const replaceWith = " ";
+
   const handleClick = () => {
     var foundEmoji;
-    var convertedUni = selectedEmoji.unified.split(search).join(replaceWith).replace(/^0+/, '').toUpperCase()
-    while(convertedUni !== "")
-    {
-      console.log(selectedEmoji)
+    var convertedUni = selectedEmoji.unified
+      .split(search)
+      .join(replaceWith)
+      .replace(/^0+/, "")
+      .toUpperCase();
+    while (convertedUni !== "") {
+      console.log(selectedEmoji);
       // eslint-disable-next-line no-loop-func
       listOfPossibleGuesses.forEach((element) => {
-        if (
-          convertedUni ===
-          element.Hex
-        ) {
+        if (convertedUni === element.Hex) {
           foundEmoji = element;
         }
       });
-      console.log(foundEmoji);
-      console.log(convertedUni)
-      if (foundEmoji === undefined)
-      {
-        convertedUni = convertedUni.substr(0, convertedUni.lastIndexOf(" "))
-        console.log(convertedUni)
-      } else{
-        convertedUni = ""
+      if (foundEmoji === undefined) {
+        convertedUni = convertedUni.substr(0, convertedUni.lastIndexOf(" "));
+      } else {
+        convertedUni = "";
       }
     }
 
-    /*if (selectedEmoji.Hex == emojiOfTheDay.Hex)
-    {
-      //win
-    }*/
-    //check year
     let year = "✅";
     if (parseInt(foundEmoji.Year) > parseInt(emojiOfTheDay.Year)) {
       year = "⬇️";
     } else if (parseInt(foundEmoji.Year) < parseInt(emojiOfTheDay.Year)) {
       year = "⬆️";
     }
-    
+
     //check Rank
     let rank = "✅";
     if (parseInt(foundEmoji.Rank) > parseInt(emojiOfTheDay.Rank)) {
       rank = "⬆️";
-    }if (parseInt(foundEmoji.Rank) < parseInt(emojiOfTheDay.Rank)) {
+    }
+    if (parseInt(foundEmoji.Rank) < parseInt(emojiOfTheDay.Rank)) {
       rank = "⬇️";
     }
 
@@ -110,13 +102,29 @@ export default function App() {
       subcategory = "✅";
     }
 
+    addItem(foundEmoji, year, rank, category, subcategory, emojiOfTheDay);
+
+    if (
+      selectedEmoji.unified
+        .split(search)
+        .join(replaceWith)
+        .replace(/^0+/, "")
+        .toUpperCase() == emojiOfTheDay.Hex
+    ) {
+      const modal = document.querySelector(".modal");
+      const closeBtn = document.querySelector(".close");
+      modal.style.display = "block";
+      closeBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+      });
+    }
+
     setSelectedEmoji(null);
-    addItem(foundEmoji, year, rank, category, subcategory);
   };
 
   const onClick = (emojiData, event) => {
     setSelectedEmoji(emojiData);
-    console.log(emojiData)
+    console.log(emojiData);
   };
 
   const previewConfig = {
@@ -127,101 +135,128 @@ export default function App() {
 
   return (
     <div>
+
       <meta charset="utf-16" />
+
       <div class="center">
+      
         <EmojiPicker
           onEmojiClick={onClick}
           emojiVersion="11.0"
           skinTonesDisabled="true"
           suggestedEmojisMode="recent"
           theme="dark"
-          previewConfig = {previewConfig}
-          emojiStyle = "native"
+          previewConfig={previewConfig}
+          emojiStyle="native"
         />
       </div>
 
       <div class="center">
         {selectedEmoji ? (
-          <span>
+          <span class="clicked-emoji">
             <Emoji
               unified={selectedEmoji.unified}
               size="100"
-              emojiStyle = "native"
+              emojiStyle="native"
             />
           </span>
         ) : (
-          <span>No emoji Chosen</span>
+          <span class="no-emoji">Select an Emoji</span>
         )}
-        <br />
-        <br />
-        <button class="button-20" onClick={handleClick}>
-          Submit
-        </button>
+        <div class="button-center">
+          <button class="button-20" onClick={handleClick}>
+            Submit
+          </button>
+        </div>
       </div>
 
-
-      <div class = "scrollable">
-      <div class="answers">
-        <div class = "shadow-box">
-          Emoji
-          
+      <div class="scrollable">
+        <div class="answers">
+          <div class="shadow-box">Emoji</div>
+          <div class="shadow-box">Released</div>
+          <div class="shadow-box">Popularity</div>
+          <div class="shadow-box">Category</div>
+          <div class="shadow-box">Sub-Category</div>
         </div>
-        <div class = "shadow-box">
-          Released
-          
-        </div>
-        <div class = "shadow-box">
-          Popularity
-          
-        </div>
-        <div class = "shadow-box">
-          Category
-          
-        </div>
-        <div class = "shadow-box">
-          Sub-Category
-          
-        </div>
-        <div class = "shadow-box">
-          Hint
-        </div>
-        
+        <div id="parent" class=""></div>
       </div>
-      <div id="parent" class = ""></div>
+      
     </div>
-    
-    </div>
-    
   );
 }
 
-function addItem(selectedEmoji, year, rank, category, subcategory) {
-  const palette = generatePalette(selectedEmoji.Emoji);
-  const dominantColor = palette[Math.floor(palette.length / 2)];
-  console.log(dominantColor)
+function addItem(
+  selectedEmoji,
+  year,
+  rank,
+  category,
+  subcategory,
+  emojiOfTheDay
+) {
+  //var palette = getPallete(selectedEmoji, emojiOfTheDay);
+  //console.log(palette)
+  /*        <div class = "shadow-box">
+          Pallete
+
+          
+        </div> */
 
   let value =
-    '<div class = "answers"><div class = "shadow-box">'
-    +selectedEmoji.Emoji+
-    '</div><div class = "spinner shadow-box">'
-    + selectedEmoji.Year + " " +  year +
-    '</div><div class = "spinner shadow-box">'
-    + selectedEmoji.Rank + " " +  rank +
-    '</div><div class = "spinner shadow-box">'
-    + selectedEmoji.Category + " " +  category +
-    '</div><div class = "spinner shadow-box">'
-    + selectedEmoji.Subcategory + " " + subcategory +
-    '</div><div class = "spinner shadow-box">'
+    '<div class = "answers"><div class = "shadow-box">' +
+    selectedEmoji.Emoji +
+    '</div><div class = "spinner shadow-box">' +
+    selectedEmoji.Year +
+    " " +
+    year +
+    '</div><div class = "spinner shadow-box">' +
+    selectedEmoji.Rank +
+    " " +
+    rank +
+    '</div><div class = "spinner shadow-box">' +
+    selectedEmoji.Category +
+    " " +
+    category +
+    '</div><div class = "spinner shadow-box">' +
+    selectedEmoji.Subcategory +
+    " " +
+    subcategory +
+    /*'</div><div class = "spinner shadow-box"><div class = "pallete" >'
     + palette +
-    '</div></div>';
+    '</div>*/ "</div></div>";
 
   document.getElementById("parent").insertBefore(
     Object.assign(document.createElement("div"), {
       innerHTML: value,
       id: "answer",
       className: "",
-    }), document.getElementById("parent").firstChild
+    }),
+    document.getElementById("parent").firstChild
   );
+}
+
+function getPallete(emoji, emojiOfTheDay) {
+  const palette = generatePalette(emoji.Emoji);
+  const eotdPalette = generatePalette(emojiOfTheDay.Emoji);
+  var test = "";
+  palette.forEach((element) => {
+    if (element != "#000000") {
+      let valid = "red";
+
+      if (eotdPalette.includes(element)) {
+        valid = "green";
+      }
+
+      test =
+        test +
+        '<div class = "pallete-box" style = "background: ' +
+        element +
+        "; border: 3px solid " +
+        valid +
+        '"></div>';
+    }
+  });
+
+  return test;
 }
 
 function cyrb128(str) {
