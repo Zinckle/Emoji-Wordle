@@ -14,6 +14,7 @@
     "d3": "^7.8.5",
     "emoji-palette": "^0.0.3",
     "emoji-picker-react": "^4.4.10",
+    "emoji-toolkit": "^7.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-input-emoji": "^5.1.1",

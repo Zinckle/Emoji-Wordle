@@ -125,11 +125,11 @@ export default function App() {
     console.log(emojiData);
   };
 
-  /*const previewConfig = {
-    defaultEmoji: "😊",
-    defaultCaption: "default",
-    showPreview: false,
-  };*/
+  const previewConfig = {
+    defaultEmoji: "1f642",
+    defaultCaption: "Please Select an Emoji",
+    showPreview: true,
+  };
 
   return (
     <div>
@@ -144,8 +144,9 @@ export default function App() {
           skinTonesDisabled="true"
           suggestedEmojisMode="recent"
           theme="dark"
-          
+          previewConfig={previewConfig}
           emojiStyle="native"
+          height={600} width={500}
         />
       </div>
 
