@@ -16,6 +16,7 @@ export default function App() {
     var date = new Date();
 
     var seed = cyrb128(
+      //remove the date get sec thing to make the randomizer like wordle
       date.getFullYear() + " " + date.getMonth() + " " + date.getDate() + date.getSeconds()
     );
     var rand = sfc32(seed[0], seed[1], seed[2], seed[3]);
@@ -51,6 +52,8 @@ export default function App() {
 
   const search = "-";
   const replaceWith = " ";
+
+  
 
   const handleClick = () => {
     var foundEmoji;
@@ -100,7 +103,11 @@ export default function App() {
       subcategory = "✅";
     }
 
-    addItem(foundEmoji, year, rank, category, subcategory, emojiOfTheDay);
+    let name = "❌";
+    if (foundEmoji.Name.charAt(0).toUpperCase() === emojiOfTheDay.Name.charAt(0).toUpperCase()) {
+      name = "✅";
+    }
+    addItem(foundEmoji, year, rank, category, subcategory, name);
 
     if (
       selectedEmoji.unified
@@ -128,11 +135,17 @@ export default function App() {
   const previewConfig = {
     defaultEmoji: "1f642",
     defaultCaption: "Please Select an Emoji",
-    showPreview: true,
+    showPreview: false,
   };
 
   return (
     <div>
+      <div class="modal">
+      <div class="modal_content">
+        <span class="close">&times;</span>
+        <p>CONGRADULATIONS!!! You did it in {counter} guesses!!!</p>
+      </div>
+    </div>
 
       <meta charset="utf-16" />
 
@@ -172,10 +185,11 @@ export default function App() {
       <div class="scrollable">
         <div class="answers">
           <div class="shadow-box">Emoji</div>
-          <div class="shadow-box">Released</div>
-          <div class="shadow-box">Popularity</div>
           <div class="shadow-box">Category</div>
           <div class="shadow-box">Sub-Category</div>
+          <div class="shadow-box">Popularity</div>
+          <div class="shadow-box">Released</div>
+          <div class="shadow-box">Name Starts With</div>
         </div>
         <div id="parent" class=""></div>
       </div>
@@ -183,15 +197,17 @@ export default function App() {
     </div>
   );
 }
-
+var counter = 0
 function addItem(
   selectedEmoji,
   year,
   rank,
   category,
   subcategory,
-  emojiOfTheDay
+  name
 ) {
+  counter = counter + 1
+  console.log (counter)
   //var palette = getPallete(selectedEmoji, emojiOfTheDay);
   //console.log(palette)
   /*        <div class = "shadow-box">
@@ -204,14 +220,6 @@ function addItem(
     '<div class = "answers"><div class = "shadow-box">' +
     selectedEmoji.Emoji +
     '</div><div class = "spinner shadow-box">' +
-    selectedEmoji.Year +
-    " " +
-    year +
-    '</div><div class = "spinner shadow-box">' +
-    selectedEmoji.Rank +
-    " " +
-    rank +
-    '</div><div class = "spinner shadow-box">' +
     selectedEmoji.Category +
     " " +
     category +
@@ -219,9 +227,19 @@ function addItem(
     selectedEmoji.Subcategory +
     " " +
     subcategory +
-    /*'</div><div class = "spinner shadow-box"><div class = "pallete" >'
-    + palette +
-    '</div>*/ "</div></div>";
+    '</div><div class = "spinner shadow-box">' +
+    selectedEmoji.Rank +
+    " " +
+    rank +
+    '</div><div class = "spinner shadow-box">' +
+    selectedEmoji.Year +
+    " " +
+    year +
+    '</div><div class = "spinner shadow-box">' +
+    selectedEmoji.Name.charAt(0).toUpperCase() +
+    " " +
+    name +
+    '</div></div>';
 
   document.getElementById("parent").insertBefore(
     Object.assign(document.createElement("div"), {
