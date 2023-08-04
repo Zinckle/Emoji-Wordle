@@ -59,11 +59,6 @@ export default function App() {
 
   const handleClick = () => {
     console.log(selectedEmoji)
-    if (selectedEmoji == null || selectedEmoji == undefined)
-    {
-      return
-    }
-
     var foundEmoji = getEmojiData(selectedEmoji, listOfPossibleGuesses);
 
     let year = "✅";
