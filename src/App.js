@@ -170,11 +170,11 @@ export default function App() {
           <span class="no-emoji">Select an Emoji</span>
         )}
         {clickedEmoji != null ?
-        <div class = "no-emoji">
-          <div>Category: {clickedEmoji.Category}</div>
-          <div>Subcategory: {clickedEmoji.Subcategory}</div>
-          <div>Popularity: {clickedEmoji.Rank}</div>
-          <div>Released: {clickedEmoji.Year}</div>
+        <div class = "">
+          <div class = "attributes">Category: {clickedEmoji.Category}</div>
+          <div class = "attributes">Subcategory: {clickedEmoji.Subcategory}</div>
+          <div class = "attributes">Popularity: {clickedEmoji.Rank}</div>
+          <div class = "attributes">Released: {clickedEmoji.Year}</div>
         </div>
         :
         <div></div>

@@ -59,6 +59,12 @@ hr.rounded {
   gap: 10px;
 }
 
+.attributes {
+  padding: 6px;
+  color: white;
+  font-size: 20px;
+}
+
 .shadow-box {
   display: flex;
   box-shadow: inset 0 0 15px #121111;
