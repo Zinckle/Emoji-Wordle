@@ -145,8 +145,8 @@ export default function App() {
           theme="dark"
           previewConfig={previewConfig}
           emojiStyle="native"
-          height={600}
-          width={500}
+          height={400}
+          width={550}
         />
       </div>
 
