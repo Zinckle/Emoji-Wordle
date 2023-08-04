@@ -52,7 +52,7 @@ hr.rounded {
 .answers {
   display: grid;
   text-align: center;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   width: 800px;
   margin: auto;
   padding: 10px;

@@ -1,12 +1,11 @@
 import "./App.css";
 import * as d3 from "d3";
 import { useState, useEffect } from "react";
-import EmojiPicker, {
-  Emoji,
-} from "emoji-picker-react";
+import EmojiPicker, { Emoji } from "emoji-picker-react";
 //import { generatePalette } from "emoji-palette";
-
+let clickedEmoji = null;
 export default function App() {
+  
   const [emojiOfTheDay, setEmojiOfTheDay] = useState(null);
   const [listOfPossibleGuesses, setListOfPossibleGuesses] = useState([]);
   // eslint-disable-next-line no-unused-vars
@@ -17,7 +16,12 @@ export default function App() {
 
     var seed = cyrb128(
       //remove the date get sec thing to make the randomizer like wordle
-      date.getFullYear() + " " + date.getMonth() + " " + date.getDate() + date.getSeconds()
+      date.getFullYear() +
+        " " +
+        date.getMonth() +
+        " " +
+        date.getDate() +
+        date.getSeconds()
     );
     var rand = sfc32(seed[0], seed[1], seed[2], seed[3]);
 
@@ -53,29 +57,14 @@ export default function App() {
   const search = "-";
   const replaceWith = " ";
 
-  
-
   const handleClick = () => {
-    var foundEmoji;
-    var convertedUni = selectedEmoji.unified
-      .split(search)
-      .join(replaceWith)
-      .replace(/^0+/, "")
-      .toUpperCase();
-    while (convertedUni !== "") {
-      console.log(selectedEmoji);
-      // eslint-disable-next-line no-loop-func
-      listOfPossibleGuesses.forEach((element) => {
-        if (convertedUni === element.Hex) {
-          foundEmoji = element;
-        }
-      });
-      if (foundEmoji === undefined) {
-        convertedUni = convertedUni.substr(0, convertedUni.lastIndexOf(" "));
-      } else {
-        convertedUni = "";
-      }
+    console.log(selectedEmoji)
+    if (selectedEmoji == null || selectedEmoji == undefined)
+    {
+      return
     }
+
+    var foundEmoji = getEmojiData(selectedEmoji, listOfPossibleGuesses);
 
     let year = "✅";
     if (parseInt(foundEmoji.Year) > parseInt(emojiOfTheDay.Year)) {
@@ -104,11 +93,14 @@ export default function App() {
     }
 
     let name = "❌";
-    if (foundEmoji.Name.charAt(0).toUpperCase() === emojiOfTheDay.Name.charAt(0).toUpperCase()) {
+    if (
+      foundEmoji.Name.charAt(0).toUpperCase() ===
+      emojiOfTheDay.Name.charAt(0).toUpperCase()
+    ) {
       name = "✅";
     }
+    console.log(clickedEmoji);
     addItem(foundEmoji, year, rank, category, subcategory, name);
-
     if (
       selectedEmoji.unified
         .split(search)
@@ -123,13 +115,15 @@ export default function App() {
         modal.style.display = "none";
       });
     }
-
+    clickedEmoji = null;
     setSelectedEmoji(null);
   };
 
   const onClick = (emojiData, event) => {
-    setSelectedEmoji(emojiData);
-    console.log(emojiData);
+    
+    clickedEmoji = getEmojiData(emojiData, listOfPossibleGuesses)
+    setSelectedEmoji(emojiData)
+    console.log(clickedEmoji)
   };
 
   const previewConfig = {
@@ -141,16 +135,13 @@ export default function App() {
   return (
     <div>
       <div class="modal">
-      <div class="modal_content">
-        <span class="close">&times;</span>
-        <p>CONGRADULATIONS!!! You did it in {counter} guesses!!!</p>
+        <div class="modal_content">
+          <span class="close">&times;</span>
+          <p>CONGRADULATIONS!!! You did it in {counter} guesses!!!</p>
+        </div>
       </div>
-    </div>
-
-      <meta charset="utf-16" />
 
       <div class="center">
-      
         <EmojiPicker
           onEmojiClick={onClick}
           emojiVersion="11.0"
@@ -159,7 +150,8 @@ export default function App() {
           theme="dark"
           previewConfig={previewConfig}
           emojiStyle="native"
-          height={600} width={500}
+          height={600}
+          width={500}
         />
       </div>
 
@@ -171,15 +163,32 @@ export default function App() {
               size="100"
               emojiStyle="native"
             />
+
+          
           </span>
         ) : (
           <span class="no-emoji">Select an Emoji</span>
         )}
-        <div class="button-center">
+        {clickedEmoji != null ?
+        <div class = "no-emoji">
+          <div>Category: {clickedEmoji.Category}</div>
+          <div>Subcategory: {clickedEmoji.Subcategory}</div>
+          <div>Popularity: {clickedEmoji.Rank}</div>
+          <div>Released: {clickedEmoji.Year}</div>
+        </div>
+        :
+        <div></div>
+        }
+        {selectedEmoji ? (
+          <div class="button-center">
           <button class="button-20" onClick={handleClick}>
             Submit
           </button>
         </div>
+        ) : (
+          <span></span>
+        )}
+        
       </div>
 
       <div class="scrollable">
@@ -189,32 +198,16 @@ export default function App() {
           <div class="shadow-box">Sub-Category</div>
           <div class="shadow-box">Popularity</div>
           <div class="shadow-box">Released</div>
-          <div class="shadow-box">Name Starts With</div>
         </div>
         <div id="parent" class=""></div>
       </div>
-      
     </div>
   );
 }
-var counter = 0
-function addItem(
-  selectedEmoji,
-  year,
-  rank,
-  category,
-  subcategory,
-  name
-) {
-  counter = counter + 1
-  console.log (counter)
-  //var palette = getPallete(selectedEmoji, emojiOfTheDay);
-  //console.log(palette)
-  /*        <div class = "shadow-box">
-          Pallete
-
-          
-        </div> */
+var counter = 0;
+function addItem(selectedEmoji, year, rank, category, subcategory, name) {
+  counter = counter + 1;
+  console.log(counter);
 
   let value =
     '<div class = "answers"><div class = "shadow-box">' +
@@ -235,11 +228,7 @@ function addItem(
     selectedEmoji.Year +
     " " +
     year +
-    '</div><div class = "spinner shadow-box">' +
-    selectedEmoji.Name.charAt(0).toUpperCase() +
-    " " +
-    name +
-    '</div></div>';
+    "</div></div>";
 
   document.getElementById("parent").insertBefore(
     Object.assign(document.createElement("div"), {
@@ -251,30 +240,32 @@ function addItem(
   );
 }
 
-/*function getPallete(emoji, emojiOfTheDay) {
-  const palette = generatePalette(emoji.Emoji);
-  const eotdPalette = generatePalette(emojiOfTheDay.Emoji);
-  var test = "";
-  palette.forEach((element) => {
-    if (element != "#000000") {
-      let valid = "red";
-
-      if (eotdPalette.includes(element)) {
-        valid = "green";
+function getEmojiData(selectedEmoji, listOfPossibleGuesses) {
+  var foundEmoji;
+  const search = "-";
+  const replaceWith = " ";
+  var convertedUni = selectedEmoji.unified
+    .split(search)
+    .join(replaceWith)
+    .replace(/^0+/, "")
+    .toUpperCase();
+  while (convertedUni !== "") {
+    
+    // eslint-disable-next-line no-loop-func
+    listOfPossibleGuesses.forEach((element) => {
+      if (convertedUni === element.Hex) {
+        foundEmoji = element;
       }
-
-      test =
-        test +
-        '<div class = "pallete-box" style = "background: ' +
-        element +
-        "; border: 3px solid " +
-        valid +
-        '"></div>';
+    });
+    if (foundEmoji === undefined) {
+      convertedUni = convertedUni.substr(0, convertedUni.lastIndexOf(" "));
+    } else {
+      convertedUni = "";
     }
-  });
+  }
+  return foundEmoji
 
-  return test;
-}*/
+}
 
 function cyrb128(str) {
   let h1 = 1779033703,
