@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import EmojiPicker, { Emoji } from "emoji-picker-react";
 //import { generatePalette } from "emoji-palette";
 let clickedEmoji = null;
+let answers = "";
+let gameWon = false;
+let position;
 export default function App() {
-  
   const [emojiOfTheDay, setEmojiOfTheDay] = useState(null);
   const [listOfPossibleGuesses, setListOfPossibleGuesses] = useState([]);
   // eslint-disable-next-line no-unused-vars
@@ -56,9 +58,10 @@ export default function App() {
 
   const search = "-";
   const replaceWith = " ";
+  console.log(emojiOfTheDay);
 
   const handleClick = () => {
-    console.log(selectedEmoji)
+    console.log(selectedEmoji);
     var foundEmoji = getEmojiData(selectedEmoji, listOfPossibleGuesses);
 
     let year = "✅";
@@ -103,6 +106,7 @@ export default function App() {
         .replace(/^0+/, "")
         .toUpperCase() === emojiOfTheDay.Hex
     ) {
+      gameWon = true;
       const modal = document.querySelector(".modal");
       const closeBtn = document.querySelector(".close");
       modal.style.display = "block";
@@ -115,10 +119,24 @@ export default function App() {
   };
 
   const onClick = (emojiData, event) => {
-    
-    clickedEmoji = getEmojiData(emojiData, listOfPossibleGuesses)
-    setSelectedEmoji(emojiData)
-    console.log(clickedEmoji)
+    clickedEmoji = getEmojiData(emojiData, listOfPossibleGuesses);
+    setSelectedEmoji(emojiData);
+    console.log(clickedEmoji);
+
+    switch (parseInt(clickedEmoji.Rank) % 10) {
+      case 1:
+        position = "st";
+        break;
+      case 2:
+        position = "nd";
+        break;
+      case 3:
+        position = "rd";
+        break;
+      default:
+        position = "th";
+        break;
+    }
   };
 
   const previewConfig = {
@@ -127,12 +145,42 @@ export default function App() {
     showPreview: false,
   };
 
+  const cat = [
+    "suggested",
+    "smileys_people",
+    "animals_nature",
+    "food_drink",
+    "travel_places",
+    "activities",
+    "objects",
+    "symbols",
+  ];
+
   return (
     <div>
       <div class="modal">
         <div class="modal_content">
           <span class="close">&times;</span>
-          <p>CONGRADULATIONS!!! You did it in {counter} guesses!!!</p>
+          <div>
+            <p class="center">
+              {" "}
+              CONGRADULATIONS!!! You did it in {counter} guesses!!!
+            </p>
+            <div class="results center">{answers}</div>
+            <button
+              class="button-28"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText("Emojle.io\n" + answers);
+                  console.log("Text copied to clipboard");
+                } catch (error) {
+                  console.error("Error copying text to clipboard:", error);
+                }
+              }}
+            >
+              Copy Answers
+            </button>
+          </div>
         </div>
       </div>
 
@@ -145,46 +193,52 @@ export default function App() {
           theme="dark"
           previewConfig={previewConfig}
           emojiStyle="native"
-          height={400}
-          width={550}
+          height={350}
+          width={500}
+          categories={cat}
         />
       </div>
-
-      <div class="center">
-        {selectedEmoji ? (
-          <span class="clicked-emoji">
-            <Emoji
-              unified={selectedEmoji.unified}
-              size="100"
-              emojiStyle="native"
-            />
-
-          
-          </span>
-        ) : (
-          <span class="no-emoji">Select an Emoji</span>
-        )}
-        {clickedEmoji != null ?
-        <div class = "">
-          <div class = "attributes">Category: {clickedEmoji.Category}</div>
-          <div class = "attributes">Subcategory: {clickedEmoji.Subcategory}</div>
-          <div class = "attributes">Popularity: {clickedEmoji.Rank}</div>
-          <div class = "attributes">Released: {clickedEmoji.Year}</div>
-        </div>
-        :
+      {gameWon ? (
         <div></div>
-        }
-        {selectedEmoji ? (
-          <div class="button-center">
-          <button class="button-20" onClick={handleClick}>
-            Submit
-          </button>
+      ) : (
+        <div class="center">
+          {selectedEmoji ? (
+            <span class="clicked-emoji">
+              <Emoji
+                unified={selectedEmoji.unified}
+                size="100"
+                emojiStyle="native"
+              />
+            </span>
+          ) : (
+            <div class="no-emoji">Select an Emoji</div>
+          )}
+          {clickedEmoji != null ? (
+            <div class="attribute-container">
+              <div class="attributes">Category: {clickedEmoji.Category}</div>
+              <div class="attributes">
+                Subcategory: {clickedEmoji.Subcategory}
+              </div>
+              <div class="attributes">
+                Popularity: {clickedEmoji.Rank}
+                {position}
+              </div>
+              <div class="attributes">Released: {clickedEmoji.Year}</div>
+            </div>
+          ) : (
+            <div></div>
+          )}
+          {selectedEmoji ? (
+            <div class="button-center">
+              <button class="button-20" onClick={handleClick}>
+                Submit
+              </button>
+            </div>
+          ) : (
+            <span></span>
+          )}
         </div>
-        ) : (
-          <span></span>
-        )}
-        
-      </div>
+      )}
 
       <div class="scrollable">
         <div class="answers">
@@ -204,22 +258,6 @@ function addItem(selectedEmoji, year, rank, category, subcategory, name) {
   counter = counter + 1;
   console.log(counter);
 
-  var position;
-  switch (parseInt(selectedEmoji.Rank) % 10) {
-    case 1:
-      position = "st"
-      break;
-      case 2:
-        position = "nd"
-      break;
-    case 3:
-      position = "rd"
-      break;
-    default:
-      position = "th"
-      break;
-  }
-
   let value =
     '<div class = "answers"><div class = "shadow-box">' +
     selectedEmoji.Emoji +
@@ -232,7 +270,8 @@ function addItem(selectedEmoji, year, rank, category, subcategory, name) {
     " " +
     subcategory +
     '</div><div class = "spinner shadow-box">' +
-    selectedEmoji.Rank + position+
+    selectedEmoji.Rank +
+    position +
     " " +
     rank +
     '</div><div class = "spinner shadow-box">' +
@@ -240,6 +279,8 @@ function addItem(selectedEmoji, year, rank, category, subcategory, name) {
     " " +
     year +
     "</div></div>";
+
+  answers = category + subcategory + rank + year + "\n" + answers;
 
   document.getElementById("parent").insertBefore(
     Object.assign(document.createElement("div"), {
@@ -261,11 +302,16 @@ function getEmojiData(selectedEmoji, listOfPossibleGuesses) {
     .replace(/^0+/, "")
     .toUpperCase();
   while (convertedUni !== "") {
-    
     // eslint-disable-next-line no-loop-func
     listOfPossibleGuesses.forEach((element) => {
       if (convertedUni === element.Hex) {
         foundEmoji = element;
+        if (
+          foundEmoji.Category === "Smileys & Emotion" ||
+          foundEmoji.Category === "People & Body"
+        ) {
+          foundEmoji.Category = "Smileys & People";
+        }
       }
     });
     if (foundEmoji === undefined) {
@@ -274,8 +320,7 @@ function getEmojiData(selectedEmoji, listOfPossibleGuesses) {
       convertedUni = "";
     }
   }
-  return foundEmoji
-
+  return foundEmoji;
 }
 
 function cyrb128(str) {

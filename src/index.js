@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     
-    <h1>Emoji of the Day</h1>
+    <h1>Emojle</h1>
     <App />
     <div class="center">
       <footer class="site-footer c">
@@ -21,8 +21,8 @@ root.render(
             <div class="col-sm-12 col-md-6">
               <h6>About</h6>
               <p class="text-justify">
-                Emoji Of The Day is an emoji bassed guessing game, the objective
-                is to guess the correct emoji based on feed back on previous
+                Emojle is an emoji bassed guessing game similar to Wordle, the objective
+                is to guess the correct emoji based on feedback on previous
                 guesses. Start by selecting any emoji and use the information
                 you get from that guess to try and find the emoji of the day!
               </p>
