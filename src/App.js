@@ -204,6 +204,22 @@ function addItem(selectedEmoji, year, rank, category, subcategory, name) {
   counter = counter + 1;
   console.log(counter);
 
+  var position;
+  switch (parseInt(selectedEmoji.Rank) % 10) {
+    case 1:
+      position = "st"
+      break;
+      case 2:
+        position = "nd"
+      break;
+    case 3:
+      position = "rd"
+      break;
+    default:
+      position = "th"
+      break;
+  }
+
   let value =
     '<div class = "answers"><div class = "shadow-box">' +
     selectedEmoji.Emoji +
@@ -216,7 +232,7 @@ function addItem(selectedEmoji, year, rank, category, subcategory, name) {
     " " +
     subcategory +
     '</div><div class = "spinner shadow-box">' +
-    selectedEmoji.Rank +
+    selectedEmoji.Rank + position+
     " " +
     rank +
     '</div><div class = "spinner shadow-box">' +
