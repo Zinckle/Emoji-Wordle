@@ -58,10 +58,10 @@ export default function App() {
 
   const search = "-";
   const replaceWith = " ";
-  console.log(emojiOfTheDay);
+  //console.log(emojiOfTheDay);
 
   const handleClick = () => {
-    console.log(selectedEmoji);
+    //console.log(selectedEmoji);
     var foundEmoji = getEmojiData(selectedEmoji, listOfPossibleGuesses);
 
     let year = "✅";
@@ -97,7 +97,7 @@ export default function App() {
     ) {
       name = "✅";
     }
-    console.log(clickedEmoji);
+    //console.log(clickedEmoji);
     addItem(foundEmoji, year, rank, category, subcategory, name);
     if (
       selectedEmoji.unified
@@ -162,9 +162,9 @@ export default function App() {
         <div class="modal_content">
           <span class="close">&times;</span>
           <div>
-            <p class="center">
+            <p class="center congrats">
               {" "}
-              CONGRADULATIONS!!! You did it in {counter} guesses!!!
+              CONGRATULATIONS!!! You found the answer in {counter} guesses!!!
             </p>
             <div class="results center">{answers}</div>
             <button

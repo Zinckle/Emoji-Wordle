@@ -239,7 +239,9 @@ font-weight: bold;
   }
 }
 
-
+.congrats{
+  font-size: 30px;
+}
 
 .button-20:focus:not(:focus-visible),
 .button-20:focus {
