@@ -58,7 +58,7 @@ export default function App() {
 
   const search = "-";
   const replaceWith = " ";
-  //console.log(emojiOfTheDay);
+  console.log(emojiOfTheDay);
 
   const handleClick = () => {
     //console.log(selectedEmoji);

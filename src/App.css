@@ -182,6 +182,9 @@ font-weight: bold;
   border: 2px solid black;
   justify-content: center;
   width: 900px;
+  height: 600px;
+  overflow-x:hidden;
+  overflow-y:auto;
 }
 
 .results{
