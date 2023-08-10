@@ -6,6 +6,7 @@ import EmojiPicker, { Emoji } from "emoji-picker-react";
 
 import { initializeApp } from "firebase/app";
 import { getAnalytics, logEvent } from "firebase/analytics";
+import { click } from "@testing-library/user-event/dist/click";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,14 +19,12 @@ const firebaseConfig = {
   storageBucket: "emoji-of-the-day-df038.appspot.com",
   messagingSenderId: "988993061012",
   appId: "1:988993061012:web:181c5baf1711a10bdd7481",
-  measurementId: "G-Q1GY4TBGM4"
+  measurementId: "G-Q1GY4TBGM4",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-
-
 
 let clickedEmoji = null;
 let answers = "";
@@ -71,8 +70,6 @@ export default function App() {
 
         rand = Math.floor(rand * 1000) % newListOfPossibleAnswers.length;
         setEmojiOfTheDay(newListOfPossibleAnswers[rand]);
-
-        //console.log(newListOfPossibleAnswers[rand]);
       })
       .catch(function (error) {
         console.error("Error loading data:", error);
@@ -83,12 +80,18 @@ export default function App() {
 
   const search = "-";
   const replaceWith = " ";
-  console.log(emojiOfTheDay);
+  //console.log(emojiOfTheDay);
 
   const handleClick = () => {
-    logEvent(analytics,"test_submit")
+    logEvent(analytics, "test_submit");
     //console.log(selectedEmoji);
     var foundEmoji = getEmojiData(selectedEmoji, listOfPossibleGuesses);
+    if (
+      emojiOfTheDay.Category === "Smileys & Emotion" ||
+      emojiOfTheDay.Category === "People & Body"
+    ) {
+      emojiOfTheDay.Category = "Smileys & People";
+    }
 
     let year = "✅";
     if (parseInt(foundEmoji.Year) > parseInt(emojiOfTheDay.Year)) {
@@ -123,7 +126,6 @@ export default function App() {
     ) {
       name = "✅";
     }
-    //console.log(clickedEmoji);
     addItem(foundEmoji, year, rank, category, subcategory, name);
     if (
       selectedEmoji.unified
@@ -145,9 +147,9 @@ export default function App() {
   };
 
   const onClick = (emojiData, event) => {
+    console.log(emojiData)
     clickedEmoji = getEmojiData(emojiData, listOfPossibleGuesses);
     setSelectedEmoji(emojiData);
-    console.log(clickedEmoji);
 
     switch (parseInt(clickedEmoji.Rank) % 10) {
       case 1:
@@ -190,7 +192,7 @@ export default function App() {
           <div>
             <p class="center congrats">
               {" "}
-              CONGRATULATIONS!!! You found the answer in {counter} guesses!!!
+              Congradulations! You found the answer in {counter} guesses!
             </p>
             <div class="results center">{answers}</div>
             <button
