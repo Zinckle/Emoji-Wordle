@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faGlobe } from "@fortawesome/free-solid-svg-icons";
+
 // Specify all properties: name, family, style
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -65,7 +66,6 @@ root.render(
     </div>
   </React.StrictMode>
 );
-
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

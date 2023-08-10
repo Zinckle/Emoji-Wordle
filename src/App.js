@@ -3,10 +3,35 @@ import * as d3 from "d3";
 import { useState, useEffect } from "react";
 import EmojiPicker, { Emoji } from "emoji-picker-react";
 //import { generatePalette } from "emoji-palette";
+
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDAKW5OI9QPbASx8B_Hip2ajIjttF5bVVA",
+  authDomain: "emoji-of-the-day-df038.firebaseapp.com",
+  projectId: "emoji-of-the-day-df038",
+  storageBucket: "emoji-of-the-day-df038.appspot.com",
+  messagingSenderId: "988993061012",
+  appId: "1:988993061012:web:181c5baf1711a10bdd7481",
+  measurementId: "G-Q1GY4TBGM4"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
+
 let clickedEmoji = null;
 let answers = "";
 let gameWon = false;
 let position;
+
 export default function App() {
   const [emojiOfTheDay, setEmojiOfTheDay] = useState(null);
   const [listOfPossibleGuesses, setListOfPossibleGuesses] = useState([]);
