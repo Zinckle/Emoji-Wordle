@@ -6,7 +6,6 @@ import EmojiPicker, { Emoji } from "emoji-picker-react";
 
 import { initializeApp } from "firebase/app";
 import { getAnalytics, logEvent } from "firebase/analytics";
-import { click } from "@testing-library/user-event/dist/click";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
