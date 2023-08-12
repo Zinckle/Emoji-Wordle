@@ -191,7 +191,7 @@ export default function App() {
           <div>
             <p class="center congrats">
               {" "}
-              Congradulations! You found the answer in {counter} guesses!
+              Congratulations! You found the answer in {counter} guesses!
             </p>
             <div class="results center">{answers}</div>
             <button
