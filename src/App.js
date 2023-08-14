@@ -37,6 +37,8 @@ export default function App() {
   const [listOfPossibleAnswers, setListOfPossibleAnswers] = useState([]);
 
   useEffect(() => {
+    logEvent(analytics, "game_start");
+
     var date = new Date();
 
     var seed = cyrb128(
@@ -79,10 +81,10 @@ export default function App() {
 
   const search = "-";
   const replaceWith = " ";
-  //console.log(emojiOfTheDay);
+  console.log(emojiOfTheDay);
 
   const handleClick = () => {
-    logEvent(analytics, "test_submit");
+    //logEvent(analytics, "test_submit");
     //console.log(selectedEmoji);
     var foundEmoji = getEmojiData(selectedEmoji, listOfPossibleGuesses);
     if (
@@ -194,6 +196,7 @@ export default function App() {
               Congratulations! You found the answer in {counter} guesses!
             </p>
             <div class="results center">{answers}</div>
+            <div class="button-pad">
             <button
               class="button-28"
               onClick={async () => {
@@ -207,6 +210,7 @@ export default function App() {
             >
               Copy Answers
             </button>
+            </div>
           </div>
         </div>
       </div>

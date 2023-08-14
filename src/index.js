@@ -12,8 +12,9 @@ import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    
+
     <h1>Emojle</h1>
+
     <App />
     <div class="center">
       <footer class="site-footer c">
