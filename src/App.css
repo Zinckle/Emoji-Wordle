@@ -63,7 +63,7 @@ hr.rounded {
 .attributes {
   padding: 6px;
   color: white;
-  font-size: 1.2vw;
+  font-size: 1.4vw;
   white-space: nowrap;
 }
 @media (max-width: 1000px) {
@@ -71,8 +71,9 @@ hr.rounded {
     font-size: 3vw;
   }
 }
-.attribue-container{
-  min-width: 400px;
+.attribute-container{
+  padding-top: 20px;
+  padding-bottom: 10px;
 }
 
 .shadow-box {
@@ -102,23 +103,18 @@ hr.rounded {
   }
 }
 
-.spinner:nth-child(1) {
-  animation-delay: 0ms;
-}
-.spinner:nth-child(2) {
-  animation-delay: 50ms;
-}
+
 .spinner:nth-child(3) {
-  animation-delay: 200ms;
+  animation-delay: 150ms;
 }
 .spinner:nth-child(4) {
-  animation-delay: 350ms;
+  animation-delay: 300ms;
 }
 .spinner:nth-child(5) {
-  animation-delay: 500ms;
+  animation-delay: 450ms;
 }
 .spinner:nth-child(6) {
-  animation-delay: 650ms;
+  animation-delay: 600ms;
 }
 
 .scrollable {
@@ -182,21 +178,32 @@ font-weight: bold;
   border: 2px solid black;
   justify-content: center;
   width: 900px;
-  height: 600px;
+  max-height: 600px;
   overflow-x:hidden;
   overflow-y:auto;
 }
+@media (max-width: 1000px) {
+  .modal_content {
+    width: 90%;
+    max-height: 70%;
+
+  }
+}
 
 .results{
-  max-width: 10px;
+  max-width: 170px;
   font-size: 26px;
   margin: auto;
-  padding-bottom: 30px;
+  padding-top: 25px;
+  padding-bottom: 10px;
+  overflow-y: auto;
+  max-height: 350px;
 }
 @media (max-width: 1000px) {
   .results {
     font-size: 54px;
-
+    max-width: 330px;
+    max-height: 800px;
   }
 }
 
@@ -283,6 +290,11 @@ font-weight: bold;
 }
 
 /* CSS */
+.button-pad {
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+
 .button-28 {
   appearance: none;
   background-color: transparent;

@@ -2,6 +2,7 @@ import "./App.css";
 import * as d3 from "d3";
 import { useState, useEffect } from "react";
 import EmojiPicker, { Emoji } from "emoji-picker-react";
+import Cookies from "js-cookie";
 //import { generatePalette } from "emoji-palette";
 
 import { initializeApp } from "firebase/app";
@@ -29,14 +30,19 @@ let clickedEmoji = null;
 let answers = "";
 let gameWon = false;
 let position;
+let listOfGuesses = [];
+var counter = 0;
 
 export default function App() {
+
   const [emojiOfTheDay, setEmojiOfTheDay] = useState(null);
   const [listOfPossibleGuesses, setListOfPossibleGuesses] = useState([]);
   // eslint-disable-next-line no-unused-vars
   const [listOfPossibleAnswers, setListOfPossibleAnswers] = useState([]);
 
   useEffect(() => {
+    logEvent(analytics, "game_start");
+    //answers = Cookies.get('emojiOfYesterday');
     var date = new Date();
 
     var seed = cyrb128(
@@ -45,8 +51,7 @@ export default function App() {
         " " +
         date.getMonth() +
         " " +
-        date.getDate() +
-        date.getSeconds()
+        date.getDate()
     );
     var rand = sfc32(seed[0], seed[1], seed[2], seed[3]);
 
@@ -76,77 +81,58 @@ export default function App() {
   }, []);
 
   const [selectedEmoji, setSelectedEmoji] = useState("");
+  const [gameWon, setGameWon] = useState(null);
+  useEffect(() => {
+    let date = new Date();
+    var clickedDate = date.getFullYear() +
+        " " +
+        date.getMonth() +
+        " " +
+        date.getDate()
+    const foundDate = Cookies.get('foundDate');
 
-  const search = "-";
-  const replaceWith = " ";
-  //console.log(emojiOfTheDay);
+    if (emojiOfTheDay !== null && (foundDate === clickedDate)) {
+      var foundListOfGuesses = Cookies.get("listOfGuesses");
+      if (foundListOfGuesses !== undefined) {
+        foundListOfGuesses = foundListOfGuesses.split(",");
+        foundListOfGuesses.forEach((element) => {
+          var emo = { unified: element };
+          listOfGuesses.push(element);
+          setGameWon(submitEmoji(emo, listOfPossibleGuesses, emojiOfTheDay));
+          Cookies.set("listOfGuesses", listOfGuesses, { expires: 1 });
+        });
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [emojiOfTheDay]);
+  
+  console.log(emojiOfTheDay);
 
   const handleClick = () => {
-    logEvent(analytics, "test_submit");
+    //logEvent(analytics, "test_submit");
     //console.log(selectedEmoji);
-    var foundEmoji = getEmojiData(selectedEmoji, listOfPossibleGuesses);
-    if (
-      emojiOfTheDay.Category === "Smileys & Emotion" ||
-      emojiOfTheDay.Category === "People & Body"
-    ) {
-      emojiOfTheDay.Category = "Smileys & People";
+    var date = new Date();
+    var clickedDate = date.getFullYear() +
+        " " +
+        date.getMonth() +
+        " " +
+        date.getDate()
+    const foundDate = Cookies.get('foundDate');
+    
+    if (foundDate !== clickedDate)
+    {
+      Cookies.set('listOfGuesses', '', { expires: 1 });
+      listOfGuesses = []
     }
-
-    let year = "✅";
-    if (parseInt(foundEmoji.Year) > parseInt(emojiOfTheDay.Year)) {
-      year = "⬇️";
-    } else if (parseInt(foundEmoji.Year) < parseInt(emojiOfTheDay.Year)) {
-      year = "⬆️";
-    }
-
-    //check Rank
-    let rank = "✅";
-    if (parseInt(foundEmoji.Rank) > parseInt(emojiOfTheDay.Rank)) {
-      rank = "⬆️";
-    }
-    if (parseInt(foundEmoji.Rank) < parseInt(emojiOfTheDay.Rank)) {
-      rank = "⬇️";
-    }
-
-    //check category
-    let category = "❌";
-    if (foundEmoji.Category === emojiOfTheDay.Category) {
-      category = "✅";
-    }
-    let subcategory = "❌";
-    if (foundEmoji.Subcategory === emojiOfTheDay.Subcategory) {
-      subcategory = "✅";
-    }
-
-    let name = "❌";
-    if (
-      foundEmoji.Name.charAt(0).toUpperCase() ===
-      emojiOfTheDay.Name.charAt(0).toUpperCase()
-    ) {
-      name = "✅";
-    }
-    addItem(foundEmoji, year, rank, category, subcategory, name);
-    if (
-      selectedEmoji.unified
-        .split(search)
-        .join(replaceWith)
-        .replace(/^0+/, "")
-        .toUpperCase() === emojiOfTheDay.Hex
-    ) {
-      gameWon = true;
-      const modal = document.querySelector(".modal");
-      const closeBtn = document.querySelector(".close");
-      modal.style.display = "block";
-      closeBtn.addEventListener("click", () => {
-        modal.style.display = "none";
-      });
-    }
+    Cookies.set('foundDate', clickedDate, { expires: 1 });
+    listOfGuesses.push(selectedEmoji.unified);
+    submitEmoji(selectedEmoji, listOfPossibleGuesses, emojiOfTheDay);
+    Cookies.set("listOfGuesses", listOfGuesses, { expires: 1 });
     clickedEmoji = null;
     setSelectedEmoji(null);
   };
 
   const onClick = (emojiData, event) => {
-    console.log(emojiData)
     clickedEmoji = getEmojiData(emojiData, listOfPossibleGuesses);
     setSelectedEmoji(emojiData);
 
@@ -191,22 +177,26 @@ export default function App() {
           <div>
             <p class="center congrats">
               {" "}
-              Congratulations! You found the answer in {counter} guesses!
+              Congratulations! You found the answer {emojiOfTheDay?.Emoji} in {counter} guesses!
             </p>
             <div class="results center">{answers}</div>
-            <button
-              class="button-28"
-              onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText("Emojle.io\n" + answers);
-                  console.log("Text copied to clipboard");
-                } catch (error) {
-                  console.error("Error copying text to clipboard:", error);
-                }
-              }}
-            >
-              Copy Answers
-            </button>
+            <div class="button-pad">
+              <button
+                class="button-28"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(
+                      "Emojle.site\n" + answers
+                    );
+                    console.log("Text copied to clipboard");
+                  } catch (error) {
+                    console.error("Error copying text to clipboard:", error);
+                  }
+                }}
+              >
+                Copy Answers
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -280,10 +270,23 @@ export default function App() {
     </div>
   );
 }
-var counter = 0;
 function addItem(selectedEmoji, year, rank, category, subcategory, name) {
   counter = counter + 1;
   console.log(counter);
+  switch (parseInt(selectedEmoji.Rank) % 10) {
+    case 1:
+      position = "st";
+      break;
+    case 2:
+      position = "nd";
+      break;
+    case 3:
+      position = "rd";
+      break;
+    default:
+      position = "th";
+      break;
+  }
 
   let value =
     '<div class = "answers"><div class = "shadow-box">' +
@@ -319,6 +322,74 @@ function addItem(selectedEmoji, year, rank, category, subcategory, name) {
   );
 }
 
+function submitEmoji(selectedEmoji, listOfPossibleGuesses, emojiOfTheDay) {
+  const search = "-";
+  const replaceWith = " ";
+
+  var foundEmoji = getEmojiData(selectedEmoji, listOfPossibleGuesses);
+  console.log("here");
+  console.log(selectedEmoji);
+  console.log(foundEmoji);
+  if (
+    emojiOfTheDay.Category === "Smileys & Emotion" ||
+    emojiOfTheDay.Category === "People & Body"
+  ) {
+    emojiOfTheDay.Category = "Smileys & People";
+  }
+
+  let year = "✅";
+  if (parseInt(foundEmoji.Year) > parseInt(emojiOfTheDay.Year)) {
+    year = "⬇️";
+  } else if (parseInt(foundEmoji.Year) < parseInt(emojiOfTheDay.Year)) {
+    year = "⬆️";
+  }
+
+  //check Rank
+  let rank = "✅";
+  if (parseInt(foundEmoji.Rank) > parseInt(emojiOfTheDay.Rank)) {
+    rank = "⬆️";
+  }
+  if (parseInt(foundEmoji.Rank) < parseInt(emojiOfTheDay.Rank)) {
+    rank = "⬇️";
+  }
+
+  //check category
+  let category = "❌";
+  if (foundEmoji.Category === emojiOfTheDay.Category) {
+    category = "✅";
+  }
+  let subcategory = "❌";
+  if (foundEmoji.Subcategory === emojiOfTheDay.Subcategory) {
+    subcategory = "✅";
+  }
+
+  let name = "❌";
+  if (
+    foundEmoji.Name.charAt(0).toUpperCase() ===
+    emojiOfTheDay.Name.charAt(0).toUpperCase()
+  ) {
+    name = "✅";
+  }
+  addItem(foundEmoji, year, rank, category, subcategory, name);
+  if (
+    selectedEmoji.unified
+      .split(search)
+      .join(replaceWith)
+      .replace(/^0+/, "")
+      .toUpperCase() === emojiOfTheDay.Hex
+  ) {
+    gameWon = true;
+    console.log(counter)
+    const modal = document.querySelector(".modal");
+    const closeBtn = document.querySelector(".close");
+    modal.style.display = "block";
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+    return gameWon
+  }
+}
+
 function getEmojiData(selectedEmoji, listOfPossibleGuesses) {
   var foundEmoji;
   const search = "-";
@@ -328,6 +399,7 @@ function getEmojiData(selectedEmoji, listOfPossibleGuesses) {
     .join(replaceWith)
     .replace(/^0+/, "")
     .toUpperCase();
+
   while (convertedUni !== "") {
     // eslint-disable-next-line no-loop-func
     listOfPossibleGuesses.forEach((element) => {
@@ -347,6 +419,7 @@ function getEmojiData(selectedEmoji, listOfPossibleGuesses) {
       convertedUni = "";
     }
   }
+  console.log(foundEmoji);
   return foundEmoji;
 }
 
