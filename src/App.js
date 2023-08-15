@@ -7,7 +7,6 @@ import Cookies from "js-cookie";
 
 import { initializeApp } from "firebase/app";
 import { getAnalytics, logEvent } from "firebase/analytics";
-import { click } from "@testing-library/user-event/dist/click";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -35,6 +34,7 @@ let listOfGuesses = [];
 var counter = 0;
 
 export default function App() {
+
   const [emojiOfTheDay, setEmojiOfTheDay] = useState(null);
   const [listOfPossibleGuesses, setListOfPossibleGuesses] = useState([]);
   // eslint-disable-next-line no-unused-vars
@@ -177,7 +177,7 @@ export default function App() {
           <div>
             <p class="center congrats">
               {" "}
-              Congratulations! You found the answer in {counter} guesses!
+              Congratulations! You found the answer {emojiOfTheDay?.Emoji} in {counter} guesses!
             </p>
             <div class="results center">{answers}</div>
             <div class="button-pad">
