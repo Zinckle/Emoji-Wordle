@@ -28,7 +28,6 @@ const analytics = getAnalytics(app);
 
 let clickedEmoji = null;
 let answers = "";
-let gameWon = false;
 let position;
 let listOfGuesses = [];
 var counter = 0;
@@ -126,10 +125,11 @@ export default function App() {
     }
     Cookies.set('foundDate', clickedDate, { expires: 1 });
     listOfGuesses.push(selectedEmoji.unified);
-    submitEmoji(selectedEmoji, listOfPossibleGuesses, emojiOfTheDay);
+    setGameWon(submitEmoji(selectedEmoji, listOfPossibleGuesses, emojiOfTheDay));
     Cookies.set("listOfGuesses", listOfGuesses, { expires: 1 });
     clickedEmoji = null;
     setSelectedEmoji(null);
+    
   };
 
   const onClick = (emojiData, event) => {
@@ -378,7 +378,7 @@ function submitEmoji(selectedEmoji, listOfPossibleGuesses, emojiOfTheDay) {
       .replace(/^0+/, "")
       .toUpperCase() === emojiOfTheDay.Hex
   ) {
-    gameWon = true;
+    var gameWon = true;
     console.log(counter)
     const modal = document.querySelector(".modal");
     const closeBtn = document.querySelector(".close");
