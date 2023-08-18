@@ -3,10 +3,11 @@ import * as d3 from "d3";
 import { useState, useEffect } from "react";
 import EmojiPicker, { Emoji } from "emoji-picker-react";
 import Cookies from "js-cookie";
-//import { generatePalette } from "emoji-palette";
+import Countdown from "react-countdown";
 
 import { initializeApp } from "firebase/app";
 import { getAnalytics, logEvent } from "firebase/analytics";
+import { toHtml } from "@fortawesome/fontawesome-svg-core";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -33,7 +34,6 @@ let listOfGuesses = [];
 var counter = 0;
 
 export default function App() {
-
   const [emojiOfTheDay, setEmojiOfTheDay] = useState(null);
   const [listOfPossibleGuesses, setListOfPossibleGuesses] = useState([]);
   // eslint-disable-next-line no-unused-vars
@@ -46,11 +46,7 @@ export default function App() {
 
     var seed = cyrb128(
       //remove the date get sec thing to make the randomizer like wordle
-      date.getFullYear() +
-        " " +
-        date.getMonth() +
-        " " +
-        date.getDate()
+      date.getFullYear() + " " + date.getMonth() + " " + date.getDate()
     );
     var rand = sfc32(seed[0], seed[1], seed[2], seed[3]);
 
@@ -83,14 +79,11 @@ export default function App() {
   const [gameWon, setGameWon] = useState(null);
   useEffect(() => {
     let date = new Date();
-    var clickedDate = date.getFullYear() +
-        " " +
-        date.getMonth() +
-        " " +
-        date.getDate()
-    const foundDate = Cookies.get('foundDate');
+    var clickedDate =
+      date.getFullYear() + " " + date.getMonth() + " " + date.getDate();
+    const foundDate = Cookies.get("foundDate");
 
-    if (emojiOfTheDay !== null && (foundDate === clickedDate)) {
+    if (emojiOfTheDay !== null && foundDate === clickedDate) {
       var foundListOfGuesses = Cookies.get("listOfGuesses");
       if (foundListOfGuesses !== undefined) {
         foundListOfGuesses = foundListOfGuesses.split(",");
@@ -102,34 +95,28 @@ export default function App() {
         });
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emojiOfTheDay]);
-  
-  console.log(emojiOfTheDay);
-
   const handleClick = () => {
     //logEvent(analytics, "test_submit");
     //console.log(selectedEmoji);
     var date = new Date();
-    var clickedDate = date.getFullYear() +
-        " " +
-        date.getMonth() +
-        " " +
-        date.getDate()
-    const foundDate = Cookies.get('foundDate');
-    
-    if (foundDate !== clickedDate)
-    {
-      Cookies.set('listOfGuesses', '', { expires: 1 });
-      listOfGuesses = []
+    var clickedDate =
+      date.getFullYear() + " " + date.getMonth() + " " + date.getDate();
+    const foundDate = Cookies.get("foundDate");
+
+    if (foundDate !== clickedDate) {
+      Cookies.set("listOfGuesses", "", { expires: 1 });
+      listOfGuesses = [];
     }
-    Cookies.set('foundDate', clickedDate, { expires: 1 });
+    Cookies.set("foundDate", clickedDate, { expires: 1 });
     listOfGuesses.push(selectedEmoji.unified);
-    setGameWon(submitEmoji(selectedEmoji, listOfPossibleGuesses, emojiOfTheDay));
+    setGameWon(
+      submitEmoji(selectedEmoji, listOfPossibleGuesses, emojiOfTheDay)
+    );
     Cookies.set("listOfGuesses", listOfGuesses, { expires: 1 });
     clickedEmoji = null;
     setSelectedEmoji(null);
-    
   };
 
   const onClick = (emojiData, event) => {
@@ -169,6 +156,19 @@ export default function App() {
     "symbols",
   ];
 
+  var today = new Date();
+
+  var tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+
+  var message
+  if (counter > 1) {
+    message = `Congratulations! You found the answer ${emojiOfTheDay?.Emoji} in ${counter} guesses!`;
+  } else {
+    message = `Congratulations! You found the answer ${emojiOfTheDay?.Emoji} in ${counter} guess!`;
+  }
+
   return (
     <div>
       <div class="modal">
@@ -176,8 +176,8 @@ export default function App() {
           <span class="close">&times;</span>
           <div>
             <p class="center congrats">
-              {" "}
-              Congratulations! You found the answer {emojiOfTheDay?.Emoji} in {counter} guesses!
+
+              {message}
             </p>
             <div class="results center">{answers}</div>
             <div class="button-pad">
@@ -196,6 +196,9 @@ export default function App() {
               >
                 Copy Answers
               </button>
+            </div>
+            <div class="timer">
+              Next game available: <Countdown date={tomorrow} daysInHours="true" />
             </div>
           </div>
         </div>
@@ -228,7 +231,7 @@ export default function App() {
               />
             </span>
           ) : (
-            <div class="no-emoji">Select an Emoji</div>
+            <div class="no-emoji">No Emoji Selected</div>
           )}
           {clickedEmoji != null ? (
             <div class="attribute-container">
@@ -272,7 +275,6 @@ export default function App() {
 }
 function addItem(selectedEmoji, year, rank, category, subcategory, name) {
   counter = counter + 1;
-  console.log(counter);
   switch (parseInt(selectedEmoji.Rank) % 10) {
     case 1:
       position = "st";
@@ -327,9 +329,6 @@ function submitEmoji(selectedEmoji, listOfPossibleGuesses, emojiOfTheDay) {
   const replaceWith = " ";
 
   var foundEmoji = getEmojiData(selectedEmoji, listOfPossibleGuesses);
-  console.log("here");
-  console.log(selectedEmoji);
-  console.log(foundEmoji);
   if (
     emojiOfTheDay.Category === "Smileys & Emotion" ||
     emojiOfTheDay.Category === "People & Body"
@@ -379,14 +378,14 @@ function submitEmoji(selectedEmoji, listOfPossibleGuesses, emojiOfTheDay) {
       .toUpperCase() === emojiOfTheDay.Hex
   ) {
     var gameWon = true;
-    console.log(counter)
+    console.log(counter);
     const modal = document.querySelector(".modal");
     const closeBtn = document.querySelector(".close");
     modal.style.display = "block";
     closeBtn.addEventListener("click", () => {
       modal.style.display = "none";
     });
-    return gameWon
+    return gameWon;
   }
 }
 
@@ -419,7 +418,6 @@ function getEmojiData(selectedEmoji, listOfPossibleGuesses) {
       convertedUni = "";
     }
   }
-  console.log(foundEmoji);
   return foundEmoji;
 }
 
