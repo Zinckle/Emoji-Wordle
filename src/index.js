@@ -23,7 +23,7 @@ root.render(
             <div class="col-sm-12 col-md-6">
               <h6>About</h6>
               <p class="text-justify">
-                Emojle is an emoji-bassed guessing game similar to Wordle, the objective
+                Emojle is an emoji-based guessing game similar to Wordle, the objective
                 is to guess the correct emoji based on feedback on previous
                 guesses. Start by selecting any emoji and use the information
                 you get from that guess to try and find the emoji of the day!
