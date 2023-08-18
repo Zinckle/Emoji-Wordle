@@ -176,7 +176,6 @@ export default function App() {
           <span class="close">&times;</span>
           <div>
             <p class="center congrats">
-
               {message}
             </p>
             <div class="results center">{answers}</div>
