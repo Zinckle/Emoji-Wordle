@@ -7,7 +7,6 @@ import Countdown from "react-countdown";
 
 import { initializeApp } from "firebase/app";
 import { getAnalytics, logEvent } from "firebase/analytics";
-import { toHtml } from "@fortawesome/fontawesome-svg-core";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -155,8 +154,6 @@ export default function App() {
     "objects",
     "symbols",
   ];
-
-  var today = new Date();
 
   var tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
