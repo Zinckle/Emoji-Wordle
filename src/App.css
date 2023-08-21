@@ -140,7 +140,7 @@ font-weight: bold;
 }
 @media (max-width: 1000px) {
   .no-emoji {
-    font-size: 3vw;
+    font-size: 6vw;
   }
 }
 .button-center {
@@ -152,8 +152,8 @@ font-weight: bold;
 }
 @media (max-width: 1000px) {
   .EmojiPickerReact {
+    max-width: 95%;
     zoom: 180%;
-
   }
 }
 
