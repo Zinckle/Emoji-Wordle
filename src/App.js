@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import Countdown from "react-countdown";
 
 import { initializeApp } from "firebase/app";
+// eslint-disable-next-line no-unused-vars
 import { getAnalytics, logEvent } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -24,6 +25,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+// eslint-disable-next-line no-unused-vars
 const analytics = getAnalytics(app);
 
 let clickedEmoji = null;
@@ -39,7 +41,7 @@ export default function App() {
   const [listOfPossibleAnswers, setListOfPossibleAnswers] = useState([]);
 
   useEffect(() => {
-    logEvent(analytics, "game_start");
+    //logEvent(analytics, "game_start");
     //answers = Cookies.get('emojiOfYesterday');
     var date = new Date();
 
