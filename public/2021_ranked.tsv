@@ -1548,5 +1548,8 @@ Hex	Rank	Emoji	Year	Category	Subcategory	Name
 \x{1F1EC 1F1F5}	1547	🇬🇵	2015	Flags	country-flag	flag: Guadeloupe
 \x{1F9B2}	1548	🦲	2018	Component	hair-style	bald
 \x{1F9B3}	1549	🦳	2018	Component	hair-style	white hair
-\x{2640 FE0F}	1550	♀️	2016	Symbol	Gender	Male Sign
-\x{2642 FE0F}	1551	♂️	2016	Symbol	Gende	Female Sign
+\x{2640 FE0F}	1550	♀️	2016	Symbol	gender	Male Sign
+\x{2642 FE0F}	1551	♂️	2016	Symbol	gender	Female Sign
+\x{A9 FE0F}	1552	©	2015	Symbol	other-symbol	Copyright Sign
+\x{AE FE0F}	1553	®	2015	Symbol	other-symbol	Registered Sign
+\x{2122 FE0F}	1554	™	2015	Symbol	other-symbol	Trade Mark Sign
