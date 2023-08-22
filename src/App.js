@@ -122,6 +122,7 @@ export default function App() {
 
   const onClick = (emojiData, event) => {
     clickedEmoji = getEmojiData(emojiData, listOfPossibleGuesses);
+    console.log(emojiData);
     setSelectedEmoji(emojiData);
 
     switch (parseInt(clickedEmoji.Rank) % 10) {
@@ -397,6 +398,7 @@ function getEmojiData(selectedEmoji, listOfPossibleGuesses) {
     .replace(/^0+/, "")
     .toUpperCase();
 
+  console.log(convertedUni)
   while (convertedUni !== "") {
     // eslint-disable-next-line no-loop-func
     listOfPossibleGuesses.forEach((element) => {
