@@ -1,6 +1,6 @@
 # Emojle
 
-Emojle is an emoji-based guessing game similar to the game wordle. it can be found at Emojle.site 
+Emojle is an emoji-based guessing game similar to the game wordle. it can be found at emojle.zinck.xyz
 
 ## How does it work?
 
